@@ -73,46 +73,33 @@ const baseController = {
     }
   },
   chiTietVnExpress: async (req: Request, res: Response) => {
-    const id = req.query.id;
-    const url = `https://vnexpress.net/${id}.html`;
-    // try {
-    //   const html = await axios(url);
-    //   const $ = cheerio.load(html.data);
-    //   const detail: detailItem = { title: "", description: "", html: "" };
-    //   $(".page-detail.top-detail > div > div").each(function (i) {
-    //     if (i === 1) {
-    //       detail.title = $(this).find("h1").text();
-    //       detail.description = $(this).find(".description").text();
-    //       detail.html = $(this).find("#divfirst").html();
-    //     }
-    //   });
-    //   return res.json({ success: true, data: detail });
-    // } catch (err) {
-    //   console.log(err);
-    //   return res
-    //     .status(500)
-    //     .json({ success: false, message: "Internal server" });
-    // }
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
-    const grabParagraph = await page.evaluate(() => {
-      const title = document.querySelector("h1.title-detail");
-      const description = document.querySelector("p.description");
-      document.querySelectorAll("img").forEach((item) => {
-        item.src = item.dataset.src;
-        console.log(item.dataset.src);
-      });
-      const html = document.querySelector("article.fck_detail");
+    try {
+      const id = req.query.id;
+      const url = `https://vnexpress.net/${id}.html`;
 
-      return {
-        title: title.textContent,
-        description: description.textContent,
-        html: html.innerHTML,
-      };
-    });
-    await browser.close();
-    return res.json({ success: true, data: grabParagraph });
+      const browser = await puppeteer.launch({ headless: false });
+      const page = await browser.newPage();
+      await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
+      const grabParagraph = await page.evaluate(() => {
+        const title = document.querySelector("h1.title-detail");
+        const description = document.querySelector("p.description");
+        document.querySelectorAll("img").forEach((item) => {
+          item.src = item.dataset.src;
+        });
+        const html = document.querySelector("article.fck_detail");
+
+        return {
+          title: title.textContent,
+          description: description.textContent,
+          html: html.innerHTML,
+        };
+      });
+      await browser.close();
+      return res.json({ success: true, data: grabParagraph });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false });
+    }
   },
 };
 
