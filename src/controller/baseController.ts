@@ -87,7 +87,9 @@ const baseController = {
         const title = document.querySelector("h1.title-detail");
         const description = document.querySelector("p.description");
         document.querySelectorAll("img").forEach((item) => {
-          item.src = item.dataset.src;
+          if (item.className.indexOf("lazy") !== -1) {
+            item.src = item.dataset.src;
+          }
         });
         const html = document.querySelector("article.fck_detail");
 
