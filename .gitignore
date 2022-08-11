@@ -3,7 +3,6 @@
 # dependencies
 /node_modules
 
-/dist
 
 # next.js
 /client/.next/
