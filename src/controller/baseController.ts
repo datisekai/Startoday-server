@@ -77,7 +77,10 @@ const baseController = {
       const id = req.query.id;
       const url = `https://vnexpress.net/${id}.html`;
 
-      const browser = await puppeteer.launch({ headless: false });
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox"],
+      });
       const page = await browser.newPage();
       await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
       const grabParagraph = await page.evaluate(() => {
