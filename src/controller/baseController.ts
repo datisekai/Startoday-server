@@ -58,6 +58,25 @@ const getDataVnExPress = async (url: string) => {
   return listNews;
 };
 
+async function autoScroll(page) {
+  await page.evaluate(async () => {
+    await new Promise((resolve: any, reject) => {
+      var totalHeight = 0;
+      var distance = 100;
+      var timer = setInterval(() => {
+        var scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+
+        if (totalHeight >= scrollHeight - window.innerHeight) {
+          clearInterval(timer);
+          resolve();
+        }
+      }, 100);
+    });
+  });
+}
+
 const baseController = {
   vnExpress: async (req: Request, res: Response) => {
     const slug = req.query.slug;
@@ -82,7 +101,7 @@ const baseController = {
         args: ["--no-sandbox"],
       });
       const page = await browser.newPage();
-      await page.goto(url, { waitUntil: "networkidle2", timeout: 0 });
+      await page.goto(url, { waitUntil: "networkidle2" });
       const grabParagraph = await page.evaluate(() => {
         const title = document.querySelector("h1.title-detail");
         const description = document.querySelector("p.description");
@@ -91,12 +110,53 @@ const baseController = {
             item.src = item.dataset.src;
           }
         });
+
+        document.querySelectorAll("a").forEach((item) => {
+          if (item.href.indexOf("vnexpress.net/") !== -1) {
+            const temp = item.href.split("vnexpress.net/")[1];
+            item.href = temp;
+            if (temp.indexOf(".html")) {
+              item.href = temp.split(".html")[0];
+            }
+          }
+        });
         const html = document.querySelector("article.fck_detail");
+
+        let similarNews: any = [];
+
+        document.querySelectorAll("#detail_topnew article").forEach((item) => {
+          let images = "";
+          let href = "";
+          let title = "";
+          let description = "";
+          const imagesHtml = item.querySelector(".thumb-art a picture img");
+          if (imagesHtml) {
+            images = imagesHtml.getAttribute("src");
+          }
+
+          const hrefHtml = item.querySelector(".thumb-art a");
+          if (hrefHtml) {
+            href = hrefHtml.getAttribute("href");
+          }
+
+          const titleHtml = item.querySelector(".title-news a");
+          if (titleHtml) {
+            title = titleHtml.textContent;
+          }
+
+          const descriptionHtml = item.querySelector(".description a");
+          if (descriptionHtml) {
+            description = descriptionHtml.textContent;
+          }
+
+          similarNews.push({ images, href, title, description });
+        });
 
         return {
           title: title.textContent,
           description: description.textContent,
           html: html.innerHTML,
+          recommends: similarNews,
         };
       });
       await browser.close();
