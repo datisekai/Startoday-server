@@ -120,6 +120,10 @@ const baseController = {
             }
           }
         });
+        const boxLienQuan2 = document.querySelector(".box-tinlienquanv2");
+        if (boxLienQuan2) {
+          boxLienQuan2.remove();
+        }
         const html = document.querySelector("article.fck_detail");
 
         let similarNews: any = [];
