@@ -101,7 +101,8 @@ const baseController = {
         args: ["--no-sandbox"],
       });
       const page = await browser.newPage();
-      await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
+      await page.setDefaultNavigationTimeout(60000);
+      await page.goto(url, { waitUntil: "load" });
       const grabParagraph = await page.evaluate(() => {
         const title = document.querySelector("h1.title-detail");
         const description = document.querySelector("p.description");
