@@ -103,7 +103,7 @@ const baseController = {
       const page = await browser.newPage();
       await page.goto(url, {
         waitUntil: "networkidle2",
-        timeout: 3000000,
+        timeout: 0,
       });
       const grabParagraph = await page.evaluate(() => {
         const title = document.querySelector("h1.title-detail");
