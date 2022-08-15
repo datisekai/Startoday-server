@@ -6,6 +6,7 @@ const CategorySchema = new Schema(
   {
     name: { type: String, required: true },
     parentId: { type: String },
+    slug: { type: String },
   },
   {
     timestamps: true,

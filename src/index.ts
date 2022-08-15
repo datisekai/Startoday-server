@@ -2,9 +2,13 @@ import express, { Request, Response } from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import BaseRoute from "./routes/base";
+// import BaseRoute from "./routes/base";
 import CategoryRoute from "./routes/category";
+import UserRoute from "./routes/User";
+import RoleRoute from "./routes/Role";
+import NewsRoute from "./routes/News";
 import mongoose from "mongoose";
+import UserController from "./controller/UserController";
 
 dotenv.config();
 const app = express();
@@ -39,7 +43,13 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello, This is server of datisekai");
 });
 
-app.use("/co-ban", BaseRoute);
+app.post("/dang-nhap", UserController.login);
+
+app.use("/nguoi-dung", UserRoute);
+app.use("/tin-tuc", NewsRoute);
+app.use("/loai-nguoi-dung", RoleRoute);
+
+// app.use("/co-ban", BaseRoute);
 app.use("/danh-muc", CategoryRoute);
 
 const PORT = process.env.PORT || 6060;
