@@ -6,5 +6,7 @@ const routes = express.Router();
 routes.post("/", isAdmin, UserController.addUser);
 routes.delete("/", isAdmin, UserController.deleteUser);
 routes.put("/", isAdmin, UserController.updateUser);
+routes.get("/", isAdmin, UserController.getUser);
+routes.get("/:_id", isAdmin, UserController.getUserbyId);
 
 export default routes;

@@ -47,7 +47,7 @@ const UserController = {
           .json({ success: false, message: "User not found" });
       }
 
-      const userUpdate = await Users.updateOne(
+      const userUpdate = await Users.findOneAndUpdate(
         { _id: currentUser._id },
         { password, status, role }
       );
@@ -99,6 +99,12 @@ const UserController = {
           .json({ success: false, message: "Email or password incorrect" });
       }
 
+      if (currentUser.status !== true) {
+        return res
+          .status(404)
+          .json({ success: false, message: "Your account was blocked!" });
+      }
+
       const token = jwt.sign(
         {
           email: currentUser.email,
@@ -124,6 +130,32 @@ const UserController = {
       });
     } catch (error) {
       console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
+  getUser: async (req: Request, res: Response) => {
+    try {
+      const users = await Users.find().sort("-createdAt");
+      return res.json({ success: true, data: users });
+    } catch (err) {
+      console.log(err);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
+  getUserbyId: async (req: Request, res: Response) => {
+    const { _id } = req.params;
+    if (!_id) {
+      return res.status(404).json({ success: false, message: "Missing _id" });
+    }
+    try {
+      const user = await Users.findById(_id);
+      return res.json({ success: true, data: user });
+    } catch (err) {
+      console.log(err);
       return res
         .status(500)
         .json({ success: false, message: "Internal server" });

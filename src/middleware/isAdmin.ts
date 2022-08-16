@@ -5,7 +5,7 @@ const isAdmin = async (req: Request, res: Response, next: any) => {
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token)
-    return res.status(400).json({
+    return res.status(401).json({
       success: false,
       message: "Missing token",
     });
@@ -15,11 +15,11 @@ const isAdmin = async (req: Request, res: Response, next: any) => {
       next();
     } else {
       return res
-        .status(404)
+        .status(401)
         .json({ success: false, message: "Token incorrect" });
     }
   } catch (error) {
-    res.status(403).json({
+    res.status(401).json({
       success: false,
       message: "Error Token",
     });

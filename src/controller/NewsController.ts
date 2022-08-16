@@ -136,6 +136,36 @@ const NewsController = {
         .json({ success: false, message: "Internal server" });
     }
   },
+  increaseView: async (req: Request, res: Response) => {
+    const { _id } = req.query;
+    if (!_id) {
+      return res.status(404).json({ success: false, message: "Missing _id" });
+    }
+
+    try {
+      const currentNews = await News.findById(_id);
+      if (!currentNews) {
+        return res
+          .status(404)
+          .json({ success: false, message: "News not found" });
+      }
+
+      const view = +currentNews.view;
+      const updateViews = await News.findOneAndUpdate(
+        { _id },
+        { view: view + 1 }
+      );
+      return res.json({
+        success: true,
+        data: { _id: updateViews._id, view: updateViews.view },
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
 };
 
 export default NewsController;

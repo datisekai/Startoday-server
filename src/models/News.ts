@@ -12,6 +12,7 @@ const NewsSchema = new Schema(
     html: { type: String },
     category: { type: Schema.Types.ObjectId, ref: "categories" },
     status: { type: Boolean },
+    view: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
