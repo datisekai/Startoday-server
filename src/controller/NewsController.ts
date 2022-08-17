@@ -25,7 +25,7 @@ const NewsController = {
         html,
         category,
         status,
-        slug: slugify(title),
+        slug: slugify(title.toLowerCase()),
       });
 
       await newNews.save();
@@ -71,7 +71,7 @@ const NewsController = {
     }
   },
   deleteNews: async (req: Request, res: Response) => {
-    const { _id } = req.body;
+    const { _id } = req.query;
     if (!_id) {
       return res
         .status(404)
@@ -159,6 +159,28 @@ const NewsController = {
         success: true,
         data: { _id: updateViews._id, view: updateViews.view },
       });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
+  getNewsBySlug: async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(404).json({ success: false, message: "Missing slug" });
+    }
+
+    try {
+      const news = await News.findOne({ slug }).populate("category");
+      if (!news) {
+        return res
+          .status(404)
+          .json({ success: false, message: "News not found" });
+      }
+
+      return res.json({ success: true, data: news });
     } catch (error) {
       console.log(error);
       return res

@@ -8,7 +8,7 @@ const CategoryController = {
       const newCategory = new Category({
         name,
         parentId: parentId || null,
-        slug: slugify(name),
+        slug: slugify(name.toLowerCase()),
       });
 
       await newCategory.save();
@@ -33,7 +33,7 @@ const CategoryController = {
     }
   },
   deleteCategory: async (req: Request, res: Response) => {
-    const { _id } = req.body;
+    const { _id } = req.query;
     if (!_id) {
       return res
         .status(404)

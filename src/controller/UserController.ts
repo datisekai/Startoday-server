@@ -61,7 +61,7 @@ const UserController = {
     }
   },
   deleteUser: async (req: Request, res: Response) => {
-    const { _id } = req.body;
+    const { _id } = req.query;
 
     if (!_id) {
       return res.status(404).json({ success: false, message: "Missing _id" });

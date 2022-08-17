@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const NewsSchema = new Schema(
   {
     author: { type: Schema.Types.ObjectId, ref: "users" },
-    slug: { type: String },
+    slug: { type: String, unique: true },
     avatar: { type: String },
     title: { type: String },
     description: { type: String },

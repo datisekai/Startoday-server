@@ -7,6 +7,7 @@ import CategoryRoute from "./routes/category";
 import UserRoute from "./routes/User";
 import RoleRoute from "./routes/Role";
 import NewsRoute from "./routes/News";
+import StatisticRoute from "./routes/Statistic";
 import mongoose from "mongoose";
 import UserController from "./controller/UserController";
 
@@ -48,6 +49,7 @@ app.post("/dang-nhap", UserController.login);
 app.use("/nguoi-dung", UserRoute);
 app.use("/tin-tuc", NewsRoute);
 app.use("/loai-nguoi-dung", RoleRoute);
+app.use("/thong-ke", StatisticRoute);
 
 // app.use("/co-ban", BaseRoute);
 app.use("/danh-muc", CategoryRoute);
