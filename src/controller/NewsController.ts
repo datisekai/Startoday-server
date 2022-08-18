@@ -1,6 +1,7 @@
 import slugify from "slugify";
 import { Request, Response } from "express";
 import News from "../models/News";
+import Category from "../models/Category";
 const NewsController = {
   addNews: async (req: Request, res: Response) => {
     const {
@@ -90,9 +91,9 @@ const NewsController = {
   },
   getNews: async (req: Request, res: Response) => {
     try {
-      const news = await News.find({ status: true })
+      const news = await News.find()
         .sort("-createdAt")
-        .populate("author")
+        .populate("author", "-password -role -status")
         .populate("category");
       return res.json({ success: true, data: news });
     } catch (error) {
@@ -127,6 +128,25 @@ const NewsController = {
     try {
       const news = await News.find({ category, status: true })
         .populate("author")
+        .populate("category");
+      return res.json({ success: true, data: news });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
+  getNewsByCategorySlug: async (req: Request, res: Response) => {
+    const { slug } = req.params;
+    if (!slug) {
+      return res.status(404).json({ success: false, message: "Missing slug" });
+    }
+
+    try {
+      const category = await Category.findOne({ slug });
+      const news = await News.find({ category: category._id, status: true })
+        .populate("author", "-password -role -status")
         .populate("category");
       return res.json({ success: true, data: news });
     } catch (error) {
@@ -174,6 +194,30 @@ const NewsController = {
 
     try {
       const news = await News.findOne({ slug }).populate("category");
+      if (!news) {
+        return res
+          .status(404)
+          .json({ success: false, message: "News not found" });
+      }
+
+      return res.json({ success: true, data: news });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ success: false, message: "Internal server" });
+    }
+  },
+  getSimilarBySlug: async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(404).json({ success: false, message: "Missing slug" });
+    }
+
+    try {
+      const news = await News.find({ category: id })
+        .populate("category")
+        .populate("author", "-password -role -status");
       if (!news) {
         return res
           .status(404)
