@@ -157,13 +157,13 @@ const NewsController = {
     }
   },
   increaseView: async (req: Request, res: Response) => {
-    const { _id } = req.query;
-    if (!_id) {
+    const { slug } = req.query;
+    if (!slug) {
       return res.status(404).json({ success: false, message: "Missing _id" });
     }
 
     try {
-      const currentNews = await News.findById(_id);
+      const currentNews = await News.findOne({ slug });
       if (!currentNews) {
         return res
           .status(404)
@@ -172,7 +172,7 @@ const NewsController = {
 
       const view = +currentNews.view;
       const updateViews = await News.findOneAndUpdate(
-        { _id },
+        { slug },
         { view: view + 1 }
       );
       return res.json({
