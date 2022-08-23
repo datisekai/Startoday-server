@@ -2,6 +2,7 @@ import slugify from "slugify";
 import { Request, Response } from "express";
 import News from "../models/News";
 import Category from "../models/Category";
+import View from "../models/View";
 const NewsController = {
   addNews: async (req: Request, res: Response) => {
     const {
@@ -30,6 +31,10 @@ const NewsController = {
       });
 
       await newNews.save();
+      const viewsNews = new View({
+        newsId: newNews._id,
+      });
+      await viewsNews.save();
       return res.json({ success: true, data: newNews });
     } catch (error) {
       console.log(error);

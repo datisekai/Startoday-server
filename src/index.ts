@@ -8,6 +8,7 @@ import UserRoute from "./routes/User";
 import RoleRoute from "./routes/Role";
 import NewsRoute from "./routes/News";
 import StatisticRoute from "./routes/Statistic";
+import ViewRoute from "./routes/view";
 import mongoose from "mongoose";
 import UserController from "./controller/UserController";
 
@@ -50,6 +51,7 @@ app.use("/nguoi-dung", UserRoute);
 app.use("/tin-tuc", NewsRoute);
 app.use("/loai-nguoi-dung", RoleRoute);
 app.use("/thong-ke", StatisticRoute);
+app.use("/luot-xem", ViewRoute);
 
 // app.use("/co-ban", BaseRoute);
 app.use("/danh-muc", CategoryRoute);
