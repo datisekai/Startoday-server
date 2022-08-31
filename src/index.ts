@@ -11,6 +11,7 @@ import StatisticRoute from "./routes/Statistic";
 import ViewRoute from "./routes/view";
 import mongoose from "mongoose";
 import UserController from "./controller/UserController";
+import SearchController from "./controller/SearchController";
 
 dotenv.config();
 const app = express();
@@ -46,6 +47,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/dang-nhap", UserController.login);
+app.get("/tim-kiem", SearchController.searchNews);
 
 app.use("/nguoi-dung", UserRoute);
 app.use("/tin-tuc", NewsRoute);

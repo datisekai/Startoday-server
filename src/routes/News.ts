@@ -1,6 +1,7 @@
 import express from "express";
 import NewsController from "../controller/NewsController";
 import isAdmin from "../middleware/isAdmin";
+import router from "./Statistic";
 
 const routes = express.Router();
 
