@@ -6,10 +6,10 @@
       "moduleResolution": "node",
       "sourceMap": true,
       "outDir": "dist",
-      "rootDir": "src",
+      "rootDir": "",
       // "strict": true
     },
     "lib": ["es2015"], 
     "exclude": ["node_modules"],
-    "include": ["./src/**/*.ts"]
+    "include": ["./src/**/*.ts", "api/index.ts"]
   }

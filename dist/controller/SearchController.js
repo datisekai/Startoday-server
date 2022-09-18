@@ -28,13 +28,21 @@ const SearchController = {
                 const result = yield News_1.default.find({ title: textReg, status: true })
                     .skip(skip)
                     .limit(Number(limit));
-                return res.json({ success: true, data: result });
+                const countResult = yield News_1.default.countDocuments({
+                    title: textReg,
+                    status: true,
+                });
+                return res.json({ success: true, data: result, total: countResult });
             }
             if (!text && category) {
                 const result = yield News_1.default.find({ category, status: true })
                     .skip(skip)
                     .limit(Number(limit));
-                return res.json({ success: true, data: result });
+                const countResult = yield News_1.default.countDocuments({
+                    category,
+                    status: true,
+                });
+                return res.json({ success: true, data: result, total: countResult });
             }
             if (text && category) {
                 const textReg = new RegExp(text.toString(), "i");
@@ -45,7 +53,12 @@ const SearchController = {
                 })
                     .skip(skip)
                     .limit(Number(limit));
-                return res.json({ success: true, data: result });
+                const countResult = yield News_1.default.countDocuments({
+                    title: textReg,
+                    status: true,
+                    category,
+                });
+                return res.json({ success: true, data: result, total: countResult });
             }
         }
         catch (error) {
