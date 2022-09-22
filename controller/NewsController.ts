@@ -13,6 +13,7 @@ const NewsController = {
       html,
       category,
       status = true,
+      slug,
     } = req.body;
     if (!author || !title || !description || !html || !category) {
       return res.status(404).json({ success: false, message: "Missing field" });
@@ -53,6 +54,7 @@ const NewsController = {
       category,
       status,
       _id,
+      slug,
     } = req.body;
     if (!author || !title || !description || !html || !category || !_id) {
       return res.status(404).json({ success: false, message: "Missing field" });
@@ -67,6 +69,7 @@ const NewsController = {
         html,
         status,
         category,
+        slug,
       });
       return res.json({ success: true, data: newsUpdate });
     } catch (error) {
