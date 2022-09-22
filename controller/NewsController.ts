@@ -28,7 +28,7 @@ const NewsController = {
         html,
         category,
         status,
-        slug: slugify(title.toLowerCase()),
+        slug: slug ? slug : slugify(title.toLowerCase()),
       });
 
       await newNews.save();
